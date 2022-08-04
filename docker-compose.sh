@@ -1,5 +1,3 @@
-#!/bin/sh
-
 (
   # Copy our config to Docker Volume for Home Assistant
   mkdir -p ./volumes/home-assistant

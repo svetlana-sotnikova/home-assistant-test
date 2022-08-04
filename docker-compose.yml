@@ -1,0 +1,40 @@
+# Use docker-compose.sh for variables substitution:
+# ./docker-compose.sh convert # show config result
+# ./docker-compose.sh up -d # start in background
+# ./docker-compose.sh down # stop
+
+version: "3"
+
+services:
+  ha:
+    # https://docs.linuxserver.io/images/docker-homeassistant
+    image: linuxserver/homeassistant:2022.6.5
+
+    restart: unless-stopped
+
+    depends_on: [mosquitto]
+
+    volumes: [./volumes/home-assistant:/config]
+
+    ports: [8123:8123]
+
+    # https://stackoverflow.com/a/56586535/4765837
+    # https://github.com/docker/for-mac/issues/2716#issuecomment-381002005
+    # https://community.home-assistant.io/t/avoid-network-mode-host-for-docker/47250/28
+    # network_mode: host
+
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      # DOCKER_HOST_IP: ${DOCKER_HOST_IP}
+      # HTTP_TRUSTED_PROXY: ${HTTP_TRUSTED_PROXY}
+      # DB_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DOCKER_HOST_IP}/${POSTGRES_DB}"
+
+  mosquitto:
+    image: eclipse-mosquitto:2.0.14
+    command: "mosquitto -c /mosquitto-no-auth.conf"
+    volumes:
+      - ./volumes/mosquitto:/mosquitto
+    ports:
+      - 1883:1883
+      - 9001:9001

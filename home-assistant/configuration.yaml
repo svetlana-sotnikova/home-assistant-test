@@ -1,0 +1,43 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# You need to setup MQTT Broker via GUI:
+# https://www.home-assistant.io/integrations/mqtt
+# For field "Broker" use `mosquitto` as Docker Container Name (internal DNS).
+
+mqtt_statestream:
+  base_topic: homeassistant-states
+  publish_attributes: true
+  publish_timestamps: true
+
+# Next line sends all states to mqtt_statestream when HA starts
+mqtt_eventstream: {}
+
+# Example Entities
+
+input_boolean:
+  example:
+    name: Example Boolean
+
+switch:
+  - platform: template
+    switches:
+      example:
+        friendly_name: Example Switch
+        value_template: |
+          {{ is_state('input_boolean.example', 'on') }}
+        icon_template: |
+          {{ 
+            "mdi:fire" if is_state(
+              'input_boolean.example',
+              'on'
+            ) else "mdi:fire-off"
+          }}
+        turn_on:
+          service: homeassistant.turn_on
+          target:
+            entity_id: input_boolean.example
+        turn_off:
+          service: homeassistant.turn_off
+          target:
+            entity_id: input_boolean.example

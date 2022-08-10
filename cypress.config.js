@@ -8,4 +8,5 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost:8123',
     includeShadowDom: true,
   },
+  chromeWebSecurity: false,
 });
